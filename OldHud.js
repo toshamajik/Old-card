@@ -2411,18 +2411,11 @@ dialog: {
     };
 
     try {
-            if (NewHudAssets) {
+      if (NewHudAssets) {
         if (!NewHudAssets.radar) NewHudAssets.radar = {};
         NewHudAssets.radar.type = self.data.type;
         NewHudAssets.radar.color = self.data.color;
       }
-
-      var engType = self.data.type;
-      if (engType === "Круглый") engType = "roundradar";
-      else if (engType === "Прямоугольный") engType = "rectradar";
-      else if (engType === "Квадратный") engType = "squareradar";
-      else engType = "ovalradar";
-      self.data.type = engType;
 
       var json = JSON.stringify(self.data);
 
