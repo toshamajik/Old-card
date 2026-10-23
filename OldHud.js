@@ -789,7 +789,7 @@ HudloaderRadar: {
     `;
   },
 
-  changeRadar(type = "\u041e\u0432\u0430\u043b\u044c\u043d\u044b\u0439", color = null) {
+changeRadar(type = "\u041e\u0432\u0430\u043b\u044c\u043d\u044b\u0439", color = null) {
     try {
       if (this.data.color && !color && type === "\u041e\u0432\u0430\u043b\u044c\u043d\u044b\u0439") {
         return;
@@ -885,6 +885,18 @@ HudloaderRadar: {
         }
         this.data.color = color;
       }
+
+      try {
+        const configData = JSON.stringify({
+          type: type,
+          color: color || ""
+        });
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://localhost:8159/save", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(configData);
+      } catch (e) {}
+
     } catch (e) {}
   },
 
