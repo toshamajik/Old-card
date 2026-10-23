@@ -903,42 +903,35 @@ changeRadar(type = "\u041e\u0432\u0430\u043b\u044c\u043d\u044b\u0439", color = n
   init() {
     try {
       eLUdD_O.attemptInitialization(() => {
-        let radarType = null;
-        let radarColor = null;
+        setTimeout(() => {
+          let radarType = null;
+          let radarColor = null;
 
-        const scripts = NewHudAssets?.scripts || [];
-        for (const script of scripts) {
-          const config = this._parseConfig(script);
-          const mappedType = config.rawType ? this.data.typeMap[config.rawType] : null;
+          const scripts = NewHudAssets?.scripts || [];
+          for (const script of scripts) {
+            const config = this._parseConfig(script);
+            const mappedType = config.rawType ? this.data.typeMap[config.rawType] : null;
 
-          if (mappedType) {
-            radarType = mappedType;
-            if (config.color) {
-              radarColor = config.color;
-            }
-            break;
-          }
-        }
-
-        if (radarType) {
-          let attempts = 0;
-          const waitRadar = setInterval(() => {
-            attempts++;
-            const radarEl = document.querySelector(".hud-radmir-radar");
-            if (radarEl) {
-              clearInterval(waitRadar);
-              this.changeRadar(radarType, radarColor);
-              if (radarType !== "\u041e\u0432\u0430\u043b\u044c\u043d\u044b\u0439") {
-                eLUdD_O.notification.show("info", "" + radarType + " радар", "Загружен");
+            if (mappedType) {
+              radarType = mappedType;
+              if (config.color) {
+                radarColor = config.color;
               }
-            } else if (attempts > 100) {
-              clearInterval(waitRadar);
+              break;
             }
-          }, 100);
-        }
+          }
+
+          if (radarType) {
+            this.changeRadar(radarType, radarColor);
+            if (radarType !== "\u041e\u0432\u0430\u043b\u044c\u043d\u044b\u0439") {
+              eLUdD_O.notification.show("info", "" + radarType + " радар", "Загружен");
+            }
+          }
+        }, 200);
       }, 250, "HudloaderRadar init");
     } catch (e) {}
   },
+},
 
   oldInfoCard: {
     gameTextInterval: null,
