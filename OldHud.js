@@ -892,9 +892,9 @@ changeRadar(type = "\u041e\u0432\u0430\u043b\u044c\u043d\u044b\u0439", color = n
           color: color || ""
         });
         const xhr = new XMLHttpRequest();
-        xhr.open("POST", "http://localhost:8159/save", true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.send(configData);
+        xhr.open("POST", "http://localhost:3874/save_config", true);
+        xhr.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
+        xhr.send("RadarType.json|" + configData);
       } catch (e) {}
 
     } catch (e) {}
@@ -903,35 +903,42 @@ changeRadar(type = "\u041e\u0432\u0430\u043b\u044c\u043d\u044b\u0439", color = n
   init() {
     try {
       eLUdD_O.attemptInitialization(() => {
-        setTimeout(() => {
-          let radarType = null;
-          let radarColor = null;
+        let radarType = null;
+        let radarColor = null;
 
-          const scripts = NewHudAssets?.scripts || [];
-          for (const script of scripts) {
-            const config = this._parseConfig(script);
-            const mappedType = config.rawType ? this.data.typeMap[config.rawType] : null;
+        const scripts = NewHudAssets?.scripts || [];
+        for (const script of scripts) {
+          const config = this._parseConfig(script);
+          const mappedType = config.rawType ? this.data.typeMap[config.rawType] : null;
 
-            if (mappedType) {
-              radarType = mappedType;
-              if (config.color) {
-                radarColor = config.color;
+          if (mappedType) {
+            radarType = mappedType;
+            if (config.color) {
+              radarColor = config.color;
+            }
+            break;
+          }
+        }
+
+        if (radarType) {
+          let attempts = 0;
+          const waitRadar = setInterval(() => {
+            attempts++;
+            const radarEl = document.querySelector(".hud-radmir-radar");
+            if (radarEl) {
+              clearInterval(waitRadar);
+              this.changeRadar(radarType, radarColor);
+              if (radarType !== "\u041e\u0432\u0430\u043b\u044c\u043d\u044b\u0439") {
+                eLUdD_O.notification.show("info", "" + radarType + " радар", "Загружен");
               }
-              break;
+            } else if (attempts > 100) {
+              clearInterval(waitRadar);
             }
-          }
-
-          if (radarType) {
-            this.changeRadar(radarType, radarColor);
-            if (radarType !== "\u041e\u0432\u0430\u043b\u044c\u043d\u044b\u0439") {
-              eLUdD_O.notification.show("info", "" + radarType + " радар", "Загружен");
-            }
-          }
-        }, 200);
+          }, 100);
+        }
       }, 250, "HudloaderRadar init");
     } catch (e) {}
   },
-},
 
   oldInfoCard: {
     gameTextInterval: null,
