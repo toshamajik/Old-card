@@ -2279,7 +2279,7 @@ changeRadar(type = "\u041e\u0432\u0430\u043b\u044c\u043d\u044b\u0439", color = n
         const enabled = NewHudAssets?.scripts?.includes("voice");
         const css =
           "\n        #app .voice-chat,\n        #app .voice-chat_controls {\n          display:" +
-          (enabled ? "flex" : "none") +
+          (enabled ? "flex" : "flex") +
           " !important;\n        }\n      ";
         eLUdD_O.createStyles(css);
       } catch (error) {}
